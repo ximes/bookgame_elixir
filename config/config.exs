@@ -19,6 +19,11 @@ config :bookgame, BookGameWeb.Endpoint,
   pubsub_server: BookGame.PubSub,
   live_view: [signing_salt: "KY0maoeI"]
 
+# Pow auth
+config :bookgame, :pow,
+  user: BookGame.Users.User,
+  repo: BookGame.Repo
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

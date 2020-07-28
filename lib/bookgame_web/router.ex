@@ -1,5 +1,11 @@
 defmodule BookGameWeb.Router do
   use BookGameWeb, :router
+  use Pow.Phoenix.Router
+
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
+  end
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,12 +19,19 @@ defmodule BookGameWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", BookGameWeb do
+  # Public routes
+  scope "/" do
     pipe_through :browser
 
-    get "/", PageController, :index
+    pow_routes()
+    get "/", BookGameWeb.PageController, :index
   end
 
+  # Protected routes
+  scope "/", BookGameWeb do
+    pipe_through [:browser, :protected]
+  end
+  
   # Other scopes may use custom stacks.
   # scope "/api", BookGameWeb do
   #   pipe_through :api
